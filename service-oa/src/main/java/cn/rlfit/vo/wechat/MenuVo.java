@@ -1,20 +1,20 @@
-package cn.rlfit.model.wechat;
+package cn.rlfit.vo.wechat;
 
-
-import cn.rlfit.model.base.BaseEntity;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @ApiModel(description = "菜单")
-@TableName("wechat_menu")
-public class Menu extends BaseEntity {
+public class MenuVo {
 
     @ApiModelProperty(value = "id")
-    @TableField("parent_id")
+    private Long id;
+
+    @ApiModelProperty(value = "id")
     private Long parentId;
 
     @ApiModelProperty(value = "名称")
@@ -23,13 +23,17 @@ public class Menu extends BaseEntity {
     @ApiModelProperty(value = "类型")
     private String type;
 
-    @ApiModelProperty(value = "网页 链接，用户点击菜单可打开链接")
+    @ApiModelProperty(value = "url")
     private String url;
 
-    @ApiModelProperty(value = "菜单KEY值，用于消息接口推送")
-    @TableField("meun_key")
+    @ApiModelProperty(value = "菜单key")
     private String meunKey;
 
     @ApiModelProperty(value = "排序")
     private Integer sort;
+
+    @ApiModelProperty(value = "下级")
+    @TableField(exist = false)
+    private List<MenuVo> children;
+
 }
