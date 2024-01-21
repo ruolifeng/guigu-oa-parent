@@ -8,16 +8,16 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 
-@Data
+@Data //生成属性的get set方法
 @ApiModel(description = "角色")
-@TableName("sys_role")
+@TableName("sys_role") //表示实体类对应的数据库表
 public class SysRole extends BaseEntity {
 	
 	private static final long serialVersionUID = 1L;
 
 	//@NotBlank(message = "角色名称不能为空")
 	@ApiModelProperty(value = "角色名称")
-	@TableField("role_name")
+	@TableField("role_name") //表示属性和表中的哪一个字段进行对应
 	private String roleName;
 
 	@ApiModelProperty(value = "角色编码")
