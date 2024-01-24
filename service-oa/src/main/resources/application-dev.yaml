@@ -7,6 +7,30 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource #指定数据库连接池
     driver-class-name: com.mysql.cj.jdbc.Driver #指定MySQL数据库驱动
-    url: jdbc:mysql://localhost:3306/guigu-oa?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf-8 #指定数据库url，必须指定时区
+    url: jdbc:mysql://localhost:3306/guigu-oa?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf-8&allowPublicKeyRetrieval=true #指定数据库url，必须指定时区
     username: root #用户
     password: 123456 #密码
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+knife4j:
+  enable: true
+  openapi:
+    title: Knife4j官方文档
+    description: "`我是测试`,**你知道吗**
+    # aaa"
+    email: sunruolifeng@gamil.com
+    concat: sunjianrong
+    url: https://rlfit.cn
+    version: v4.0
+    license: Apache 2.0
+    license-url: https://stackoverflow.com/
+    terms-of-service-url: https://stackoverflow.com/
+    group:
+      test1:
+        group-name: 测试用户接口
+        api-rule: package
+        api-rule-resources:
+          - cn.rlfit

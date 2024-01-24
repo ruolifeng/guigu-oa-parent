@@ -5,10 +5,12 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 
 @Data //生成属性的get set方法
+@AllArgsConstructor
 @ApiModel(description = "角色")
 @TableName("sys_role") //表示实体类对应的数据库表
 public class SysRole extends BaseEntity {

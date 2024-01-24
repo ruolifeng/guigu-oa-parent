@@ -1,11 +1,11 @@
 package cn.rlfit.auth;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@MapperScan("cn.rlfit.auth.mapper")
+@ComponentScan("cn.rlfit") //指定包扫描路径
 public class ServiceAuthApplication {
     public static void main(String[] args) {
         SpringApplication.run(ServiceAuthApplication.class, args);
