@@ -86,7 +86,7 @@ public class SysRoleController {
      * @return 返回查询结果
      */
     @ApiOperation("04.根据id查询角色")
-    @GetMapping("get/{id}")
+    @GetMapping("search/{id}")
     public Result get(@PathVariable Long id) {
         SysRole role = service.getById(id);
         return Result.ok(role);
