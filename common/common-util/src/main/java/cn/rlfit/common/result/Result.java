@@ -11,7 +11,7 @@ import lombok.Data;
 
 @Data
 public class Result<T> {
-    private Integer coed; //操作的状态码
+    private Integer code; //操作的状态码
     private String message; //是否成功
     private T data; //查询出来的具体数据
 
@@ -23,7 +23,7 @@ public class Result<T> {
     public static <T> Result<T> build(T body, ResultCode resultCode) {
         Result<T> result = new Result<>();
         if (body != null) result.setData(body);
-        result.setCoed(resultCode.getCode());
+        result.setCode(resultCode.getCode());
         result.setMessage(resultCode.getMessage());
         return result;
     }
@@ -52,8 +52,8 @@ public class Result<T> {
         return this;
     }
 
-    public Result<T> code(Integer coed) {
-        this.setCoed(coed);
+    public Result<T> code(Integer code) {
+        this.setCode(code);
         return this;
     }
 }
