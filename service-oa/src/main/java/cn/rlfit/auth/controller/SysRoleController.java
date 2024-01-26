@@ -3,6 +3,7 @@ package cn.rlfit.auth.controller;
 import cn.rlfit.auth.service.SysRoleService;
 import cn.rlfit.common.result.Result;
 import cn.rlfit.model.system.SysRole;
+import cn.rlfit.vo.system.AssginRoleVo;
 import cn.rlfit.vo.system.SysRoleQueryVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -13,6 +14,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Api(tags = "01.角色管理接口")
 @RestController //融合注解，交给spring进行管理，返回json数据
@@ -49,8 +51,8 @@ public class SysRoleController {
      */
     @ApiOperation("02.条件分页查询")
     @GetMapping("{page}/{limit}")
-    public Result<Page<SysRole>> pageQueryRole(@PathVariable Long page,
-                                               @PathVariable Long limit,
+    public Result<Page<SysRole>> pageQueryRole(@PathVariable("page") Long page,
+                                               @PathVariable("limit") Long limit,
                                                SysRoleQueryVo vo) {
 //        创建一个配置对象，传递参数
         Page<SysRole> pageParam = new Page<>(page, limit);
@@ -129,5 +131,22 @@ public class SysRoleController {
         boolean isSuccess = service.removeByIds(idList);
         if (isSuccess) return Result.ok();
         return Result.fail();
+    }
+
+    //    查询所有的角色和当前用户所属的角色
+    @ApiOperation("08.获取所有角色")
+    @GetMapping("/toAssign/{userId}")
+    public Result toAssign(@PathVariable("userId") Long userId) {
+        Map<String, Object> map = service.findRoleDataByUserId(userId);
+        return Result.ok(map);
+    }
+
+    //    为当前用户分配角色
+    @ApiOperation("09.为用户分配角色")
+    @PostMapping("/doAssign")
+    public Result doAssign(@RequestBody AssginRoleVo vo) {
+//        为某个用户分配角色，一个用户可以有多个角色
+        service.doAssign(vo);
+        return Result.ok();
     }
 }
