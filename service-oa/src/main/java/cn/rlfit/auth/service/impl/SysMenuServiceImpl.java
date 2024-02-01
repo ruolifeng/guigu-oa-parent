@@ -8,13 +8,18 @@ import cn.rlfit.common.config.exception.GuiguException;
 import cn.rlfit.model.system.SysMenu;
 import cn.rlfit.model.system.SysRoleMenu;
 import cn.rlfit.vo.system.AssginMenuVo;
+import cn.rlfit.vo.system.MetaVo;
+import cn.rlfit.vo.system.RouterVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @description: some desc
@@ -107,5 +112,98 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
             sysRoleMenu.setRoleId(vo.getRoleId());
             sysRoleMenuService.save(sysRoleMenu);
         }
+    }
+
+    @Override
+    public List<RouterVo> getUserMenuListById(Long userId) {
+//        通过用户id进行查询，判断是不是管理员，如果是管理员就直接查询所有值
+        List<SysMenu> sysMenuList = null;
+        if (userId == 1) {
+//            根据状态查询所有，然后进行排序
+            LambdaQueryWrapper<SysMenu> wrapper = new LambdaQueryWrapper<>();
+//            封装查询条件，条件值是1表示查询管理员
+            wrapper.eq(SysMenu::getStatus, "1");
+//            表示按照这个字段进行排序
+            wrapper.orderByAsc(SysMenu::getSortValue);
+//            从菜单表中查询出所有的菜单封装成一个集合
+            sysMenuList = baseMapper.selectList(wrapper);
+        } else {
+            //        如果不是管理员就根据id进行查找，这里需要写sql语句
+            sysMenuList = baseMapper.getMenuListById(userId);
+        }
+//        将查询到的数据组建成路由结构，但是这个结构不符合我们的要求，我们需要重新构建，每一次递归都是一个新的集合，存储在上一个集合中为List类型的字段中
+        List<SysMenu> buildTree = MenuHelp.buildTree(sysMenuList);
+        List<RouterVo> routerTree = this.buildRouter(buildTree);
+        return routerTree;
+    }
+
+    /**
+     * 构建router树形结构
+     * @param menus 之前构建的树形结构
+     * @return 新构建的符合要求的树形结构
+     */
+    private List<RouterVo> buildRouter(List<SysMenu> menus) {
+        List<RouterVo> routers = new ArrayList<>();
+        for (SysMenu menu : menus) {
+            RouterVo vo = new RouterVo();
+            vo.setHidden(false);
+            vo.setAlwaysShow(false);
+            vo.setPath(getRouterPath(menu));
+            vo.setComponent(menu.getComponent());
+            vo.setMeta(new MetaVo(menu.getName(), menu.getIcon()));
+            List<SysMenu> children = menu.getChildren();
+//            如果说存在隐藏路由，那么需要将隐藏路由加载出来
+            if (menu.getType().intValue() == 1) {
+                List<SysMenu> hiddenMenuList = children.stream()
+                        .filter(item -> !StringUtils.isEmpty(item.getComponent()))
+                        .collect(Collectors.toList());
+                for (SysMenu hiddenMenu : hiddenMenuList) {
+                    RouterVo hiddenRouter = new RouterVo();
+//                    表示这个是一个隐藏路由
+                    hiddenRouter.setHidden(true);
+                    hiddenRouter.setAlwaysShow(false);
+                    hiddenRouter.setPath(getRouterPath(hiddenMenu));
+                    hiddenRouter.setComponent(hiddenMenu.getComponent());
+                    hiddenRouter.setMeta(new MetaVo(hiddenMenu.getName(), hiddenMenu.getIcon()));
+                    routers.add(hiddenRouter);
+                }
+            } else {
+                if (!CollectionUtils.isEmpty(children)) {
+                    if (children.size() > 0) {
+                        vo.setAlwaysShow(true);
+                    }
+                    vo.setChildren(buildRouter(children));
+                }
+            }
+            routers.add(vo);
+        }
+        return routers;
+    }
+
+    @Override
+    public List<String> getUserPermsById(Long userId) {
+//        判断是否是管理员，如果是则查询所有按钮
+        List<SysMenu> sysMenuList = null;
+        if (userId == 1) {
+            //            根据状态查询所有，然后进行排序
+            LambdaQueryWrapper<SysMenu> wrapper = new LambdaQueryWrapper<>();
+//            封装查询条件，条件值是1表示查询管理员
+            wrapper.eq(SysMenu::getStatus, "1");
+//            从菜单表中查询出所有的菜单封装成一个集合
+            sysMenuList = baseMapper.selectList(wrapper);
+        }
+//        如果不是则根据用户id进行查询
+        sysMenuList = baseMapper.getMenuListById(userId);
+        List<String> list = sysMenuList.stream()
+                .filter(item -> item.getType() == 2).map(SysMenu::getPerms).toList();
+        return list;
+    }
+
+    public String getRouterPath(SysMenu menu) {
+        String routerPath = "/" + menu.getPath();
+        if (menu.getParentId().intValue() != 0) {
+            routerPath = menu.getPath();
+        }
+        return routerPath;
     }
 }

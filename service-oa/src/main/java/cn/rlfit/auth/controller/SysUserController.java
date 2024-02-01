@@ -2,6 +2,7 @@ package cn.rlfit.auth.controller;
 
 import cn.rlfit.auth.service.SysUserService;
 import cn.rlfit.common.result.Result;
+import cn.rlfit.common.util.MD5Util;
 import cn.rlfit.model.system.SysUser;
 import cn.rlfit.vo.system.SysUserQueryVo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -61,6 +62,10 @@ public class SysUserController {
     @ApiOperation(value = "03.保存用户")
     @PostMapping("save")
     public Result save(@RequestBody SysUser user) {
+//        service.save(user);
+//        在保存用户的时候需将用户的密码进行加密然后再存储
+        String md5Upper = MD5Util.md5Upper(user.getPassword(), "gdfguefvsdjfgjSHJKDGFJgjhsdg#@$");
+        user.setPassword(md5Upper);
         service.save(user);
         return Result.ok();
     }

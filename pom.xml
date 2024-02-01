@@ -26,7 +26,7 @@
         <mybatis-plus.version>3.4.1</mybatis-plus.version>
         <mysql.version>8.0.30</mysql.version>
         <knife4j.version>4.4.0</knife4j.version>
-        <jwt.version>0.9.1</jwt.version>
+        <jjwt.version>0.11.2</jjwt.version>
         <fastjson.version>2.0.21</fastjson.version>
     </properties>
     <dependencyManagement>
@@ -52,8 +52,20 @@
             <!--jjwt-->
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
-                <artifactId>jjwt</artifactId>
-                <version>${jwt.version}</version>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
+                <scope>runtime</scope>
             </dependency>
             <!--fastjson-->
             <dependency>

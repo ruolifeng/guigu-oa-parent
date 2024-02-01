@@ -18,8 +18,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     @ResponseBody
-    public Result error() {
-        return Result.fail().message("执行全局异常处理");
+    public Result error(Exception e) {
+        return Result.fail().message("执行全局异常处理"+e.getMessage());
     }
 
 

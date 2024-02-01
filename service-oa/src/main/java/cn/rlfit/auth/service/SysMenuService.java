@@ -2,6 +2,7 @@ package cn.rlfit.auth.service;
 
 import cn.rlfit.model.system.SysMenu;
 import cn.rlfit.vo.system.AssginMenuVo;
+import cn.rlfit.vo.system.RouterVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -20,4 +21,9 @@ public interface SysMenuService extends IService<SysMenu> {
     List<SysMenu> findMenuByRoleId(Long roleId);
 
     void doAssign(AssginMenuVo vo);
+
+    List<RouterVo> getUserMenuListById(Long userId);
+
+    List<String> getUserPermsById(Long userId);
+
 }
