@@ -6,12 +6,14 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Data
 @ApiModel(description = "用户")
 @TableName("sys_user")
+@Component
 public class SysUser extends BaseEntity {
 	
 	private static final long serialVersionUID = 1L;

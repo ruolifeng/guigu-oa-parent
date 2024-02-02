@@ -3,6 +3,7 @@ package cn.rlfit.auth.service.impl;
 import cn.rlfit.auth.mapper.SysUserMapper;
 import cn.rlfit.auth.service.SysUserService;
 import cn.rlfit.model.system.SysUser;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -22,5 +23,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         user.setStatus(status);
 //        3.调用方法进行修改
         baseMapper.updateById(user);
+    }
+
+    @Override
+    public SysUser getUserByUserName(String username) {
+        LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SysUser::getUsername, username);
+        SysUser user = baseMapper.selectOne(wrapper);
+        return user;
     }
 }

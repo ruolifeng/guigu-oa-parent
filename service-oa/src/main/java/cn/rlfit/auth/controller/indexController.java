@@ -85,7 +85,7 @@ public class indexController {
         map.put("avatar", user.getHeadUrl());
         map.put("introduction", user.getDescription());
         map.put("routers", router);
-        map.put("perms", perms);
+        map.put("buttons", perms);
         return Result.ok(map);
     }
 
