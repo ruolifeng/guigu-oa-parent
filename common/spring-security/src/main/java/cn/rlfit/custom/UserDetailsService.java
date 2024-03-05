@@ -2,6 +2,7 @@ package cn.rlfit.custom;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 
 /**
  * @description: some desc
@@ -9,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
  * @email: sunruolifeng@gmail.com
  * @date: 02/02/2024 4:01 PM
  */
-public interface UserDetailsService {
+@Component
+public interface UserDetailsService extends org.springframework.security.core.userdetails.UserDetailsService {
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 }

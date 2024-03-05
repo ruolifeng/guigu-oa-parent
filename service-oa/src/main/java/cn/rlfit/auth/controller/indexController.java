@@ -54,6 +54,8 @@ public class indexController {
         if (Objects.isNull(oneUser)) throw new GuiguException(201, "用户名或密码错误");
         String md5Upper = MD5Util.md5Upper(vo.getPassword(), "gdfguefvsdjfgjSHJKDGFJgjhsdg#@$");
         if (!(oneUser.getPassword().equals(md5Upper))) throw new GuiguException(202, "用户名或密码错误");
+        // 判断用户是否被禁用
+        if (oneUser.getStatus().intValue() == 0) throw new GuiguException(202, "用户被禁用");
         Map<String, Object> userMap = new HashMap<>();
         userMap.put("userId", oneUser.getId());
         userMap.put("username", oneUser.getUsername());

@@ -3,7 +3,6 @@ package cn.rlfit.custom;
 import cn.rlfit.model.system.SysUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 
@@ -13,7 +12,6 @@ import java.util.Collection;
  * @email: sunruolifeng@gmail.com
  * @date: 02/02/2024 3:47 PM
  */
-@Component
 public class CustomUser extends User {
     private SysUser sysUser;
 
