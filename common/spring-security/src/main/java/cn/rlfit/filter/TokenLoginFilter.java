@@ -5,7 +5,9 @@ import cn.rlfit.common.result.ResponseUtil;
 import cn.rlfit.common.result.Result;
 import cn.rlfit.custom.CustomUser;
 import cn.rlfit.vo.system.LoginVo;
+import com.alibaba.fastjson2.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,11 +33,13 @@ import java.util.Map;
  */
 @Component
 public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
-    public TokenLoginFilter(AuthenticationManager authenticationManager) {
+    private RedisTemplate redisTemplate;
+    public TokenLoginFilter(AuthenticationManager authenticationManager, RedisTemplate redisTemplate) {
         this.setAuthenticationManager(authenticationManager);
         this.setPostOnly(false);
         // 指定登录提交的接口和方式
         this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/admin/system/index/login", "POST"));
+        this.redisTemplate = redisTemplate;
     }
 
     // 获取用户输入的用户名和密码，调用方法进行认证
@@ -60,6 +64,9 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         map.put("username", customUser.getSysUser().getUsername());
         map.put("id", customUser.getSysUser().getId());
         String token = jwtUtils.createJwt((new Date(System.currentTimeMillis() + 60 * 60 * 24)), map);
+
+        // 获取当前用户权限，放入redis中
+        redisTemplate.opsForValue().set(customUser.getUsername(), JSON.toJSONString(customUser.getAuthorities()));
         Map<String, Object> map2 = new HashMap<>();
         map2.put("token", token);
         ResponseUtil.out(response, Result.ok(map2));

@@ -73,7 +73,7 @@ public class indexController {
 //        使用jwt解析获取用户id
         Map<String, Object> userMap = jwtUtils.getPayLoadALSOExcludeExpAndIat(token);
 //        根据id获取用户信息
-        Object userId = userMap.get("userId");
+        Object userId = userMap.get("id");
         if (StringUtils.isEmpty(userId)) throw new RuntimeException("错误的token");
         Long userIdLong = userId instanceof Integer ? Long.parseLong(userId.toString()) : (Long) userId;
         SysUser user = sysUserService.getById(userIdLong);
